@@ -9,54 +9,76 @@
     <body>
         <h1>Steam Achievement Tracker</h1>
 
-        <h2>Inputs</h2>
-        <form id="form">
-            <label>
-                SteamID:
-                <input type="text" id="steamid" required />
-            </label>
-            <br /><br />
-            <label>
-                AppID:
-                <input type="text" id="appid" required />
-            </label>
-            <br /><br />
-            <label>
-                APIKey:
-                <input type="text" id="apikey" required />
-            </label>
-            <br /><br />
-        </form>
+        <div id="inputs">
+            <h2>Inputs</h2>
+
+            <form id="form">
+                <label>
+                    SteamID:
+                    <input type="text" id="steamid" required />
+                </label>
+
+                <br /><br />
+
+                <label>
+                    AppID:
+                    <input type="text" id="appid" required />
+                </label>
+
+                <br /><br />
+
+                <label>
+                    APIKey:
+                    <input type="text" id="apikey" required />
+                </label>
+
+                <br /><br />
+            </form>
+        </div>
 
         <hr />
 
-        <h2>Links</h2>
-        <button id="generateLinks">generate Links</button>
-        <br /><br />
-        <label for="output1">
-            output1
-            <input type="text" readonly id="output1" />
-        </label>
-        <br /><br />
-        <label for="output2">
-            output2
-            <input type="text" readonly id="output2" />
-        </label>
-        <br /><br />
+        <div id="links">
+            <h2>Links</h2>
+
+            <button id="generateLinks">generate Links</button>
+
+            <br /><br />
+
+            <label for="output1">
+                output1
+                <input type="text" readonly id="output1" />
+            </label>
+
+            <br /><br />
+
+            <label for="output2">
+                output2
+                <input type="text" readonly id="output2" />
+            </label>
+
+            <br /><br />
+        </div>
 
         <hr />
 
-        <h2>JSON inputs</h2>
-        <label for="jsonInput1">
-            JSON1
-            <input type="text" readonly id="jsonInput1" />
-        </label>
-        <br /><br />
-        <label for="jsonInput2">
-            JSON2
-            <input type="text" readonly id="jsonInput2" />
-        </label>
-        <br /><br />
+        <div id="jsonInputs">
+            <h2>JSON inputs</h2>
+
+            <label for="jsonInput1">
+                JSON1
+                <input type="text" readonly id="jsonInput1" />
+            </label>
+
+            <br /><br />
+
+            <label for="jsonInput2">
+                JSON2
+                <input type="text" readonly id="jsonInput2" />
+            </label>
+
+            <br /><br />
+        </div>
 
         <hr />
 
