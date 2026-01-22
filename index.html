@@ -2,59 +2,59 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Achievement Tracker</title>
-    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
-    <script src="./main.js"></script>
+	<title>Achievement Tracker</title>
+	<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+	<script src="./main.js"></script>
 </head>
-<body>
-  <h1>Steam Achievement Tracker</h1>
+    <body>
+        <h1>Steam Achievement Tracker</h1>
 
-  <h2>Inputs</h2>
-  <form id="form">
-      <label>
-          SteamID:
-          <input type="text" id="steamid" required />
-      </label>
-      <br /><br />
-      <label>
-          AppID:
-          <input type="text" id="appid" required />
-      </label>
-      <br /><br />
-      <label>
-          APIKey:
-          <input type="text" id="apikey" required />
-      </label>
-      <br /><br />
-  </form>
+        <h2>Inputs</h2>
+        <form id="form">
+            <label>
+                SteamID:
+                <input type="text" id="steamid" required />
+            </label>
+            <br /><br />
+            <label>
+                AppID:
+                <input type="text" id="appid" required />
+            </label>
+            <br /><br />
+            <label>
+                APIKey:
+                <input type="text" id="apikey" required />
+            </label>
+            <br /><br />
+        </form>
 
-  <hr />
+        <hr />
 
-  <h2>Links</h2>
-  <button id="generateLinks">generate Links</button>
-  <br /><br />
-  <label for="output1">
-      output1
-      <input type="text" readonly id="output1" />
-  </label>
-  <br /><br />
-  <label for="output2">
-      output2
-      <input type="text" readonly id="output2" />
-  </label>
-  <br /><br />
-  <button id="refreshBtn">refresh / load Achievements</button>
+        <h2>Links</h2>
+        <button id="generateLinks">generate Links</button>
+        <br /><br />
+        <label for="output1">
+            output1
+            <input type="text" readonly id="output1" />
+        </label>
+        <br /><br />
+        <label for="output2">
+            output2
+            <input type="text" readonly id="output2" />
+        </label>
+        <br /><br />
+        <button id="refreshBtn">refresh / load Achievements</button>
+        <br /><br />
 
-  <hr />
+        <hr />
 
-  <h2>JSON inputs</h2>
-  <div id="status"></div>
-  <div>
-      <label>
-          <input type="checkbox" id="onlyMissing" />
-          only show missing achievements
-      </label>
-  </div>
-  <div id="list"></div>
-</body>
+        <div id="status"></div>
+            <div>
+                <label>
+                    <input type="checkbox" id="onlyMissing" />
+                    only show missing achievements
+                </label>
+            </div>
+        <div id="list"></div>
+    </body>
 </html>
