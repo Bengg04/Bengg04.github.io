@@ -2,92 +2,63 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-	<title>Achievement Tracker</title>
-	<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
-	<script src="./main.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+    <link rel="stylesheet" href="./style.css">
+    <title>Achievement Tracker</title>
+    <script src="./main.js"></script>
 </head>
     <body>
-        <h1>Steam Achievement Tracker</h1>
-
-        <div id="inputs">
-            <h2>Inputs</h2>
-
-            <form id="form">
-                <label>
-                    SteamID:
-                    <input type="text" id="steamid" required />
-                </label>
-
-                <br /><br />
-
-                <label>
-                    AppID:
-                    <input type="text" id="appid" required />
-                </label>
-
-                <br /><br />
-
-                <label>
-                    APIKey:
-                    <input type="text" id="apikey" required />
-                </label>
-
-                <br /><br />
-            </form>
+        <div class="mainContainer">
+            <h1>Steam Achievement Tracker</h1>
+            <div class="menuContainer">
+                <div id="inputs">
+                    <h2>Inputs</h2>
+                    <div class="inputContainer">
+                        <label>
+                            SteamID:
+                            <input type="text" id="steamid" required />
+                        </label>
+                        <label>
+                            AppID:
+                            <input type="text" id="appid" required />
+                        </label>
+                        <label>
+                            APIKey:
+                            <input type="text" id="apikey" required />
+                        </label>
+                    </div>
+                </div>
+                <div id="links">
+                    <h2>Links</h2>
+                    <div class="inputContainer">
+                        <button id="generateLinks">generate Links</button>
+                        <label for="output1">
+                            output1
+                            <input type="text" readonly id="output1" />
+                        </label>
+                        <label for="output2">
+                            output2
+                            <input type="text" readonly id="output2" />
+                        </label>
+                    </div>
+                </div>
+                <div id="jsonInputs">
+                    <h2>JSON inputs</h2>
+                    <div class="inputContainer">
+                        <label for="jsonInput1">
+                            JSON1
+                            <input type="text" id="jsonInput1" />
+                        </label>
+                        <label for="jsonInput2">
+                            JSON2
+                            <input type="text" id="jsonInput2" />
+                        </label>
+                        <button id="refreshBtn">refresh / load Achievements</button>
+                    </div>
+                </div>
+            </div>
+            <div id="status"></div>
+            <div id="list"></div>
         </div>
-
-        <hr />
-
-        <div id="links">
-            <h2>Links</h2>
-
-            <button id="generateLinks">generate Links</button>
-
-            <br /><br />
-
-            <label for="output1">
-                output1
-                <input type="text" readonly id="output1" />
-            </label>
-
-            <br /><br />
-
-            <label for="output2">
-                output2
-                <input type="text" readonly id="output2" />
-            </label>
-
-            <br /><br />
-        </div>
-
-        <hr />
-
-        <div id="jsonInputs">
-            <h2>JSON inputs</h2>
-
-            <label for="jsonInput1">
-                JSON1
-                <input type="text" id="jsonInput1" />
-            </label>
-
-            <br /><br />
-
-            <label for="jsonInput2">
-                JSON2
-                <input type="text" id="jsonInput2" />
-            </label>
-
-            <br /><br />
-
-            <button id="refreshBtn">refresh / load Achievements</button>
-
-            <br /><br />
-        </div>
-
-        <hr />
-
-        <div id="status"></div>
-
-        <div id="list"></div>
     </body>
 </html>

@@ -1,0 +1,24 @@
+.mainContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem;
+    gap: 2rem;
+}
+
+.menuContainer{
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+}
+
+.inputContainer {
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+}
+
+label {
+    display: grid;
+    grid-template-columns: 2fr 5fr;
+}
