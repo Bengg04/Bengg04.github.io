@@ -3,7 +3,7 @@ $(document).ready(function(){
     const buttonGenerateLink = document.getElementById("generateLinks");
 
     buttonGenerateLink.addEventListener("click", () => {
-        const output1 = document.getElementById("output1");
+        const outputAllAchievementsLink = document.getElementById("outputAllAchievementsLink");
         const output2 = document.getElementById("output2");
 
 
@@ -11,42 +11,49 @@ $(document).ready(function(){
         const appid = document.getElementById("appid").value.trim();
         const apikey = document.getElementById("apikey").value.trim();
 
-        output1.value = `https://api.steampowered.com/ISteamUserStats/GetPlayerAchievements/v1/?key=${apikey}&steamid=${steamid}&appid=${appid}&l=en`;
-        output2.value = `https://api.steampowered.com/ISteamUserStats/GetSchemaForGame/v2/?key=${apikey}&appid=${appid}&l=de`;
+        outputAllAchievementsLink.value = `https://api.steampowered.com/ISteamUserStats/GetSchemaForGame/v2/?key=${apikey}&appid=${appid}&l=de`;
+        output2.value = `https://api.steampowered.com/ISteamUserStats/GetPlayerAchievements/v1/?key=${apikey}&steamid=${steamid}&appid=${appid}&l=en`;
     });
 
     buttonRefresh.addEventListener("click", () => {
-        const input1 = document.getElementById("jsonInput1").value;
+        const inputAllAchievements = document.getElementById("jsonAllAchievements").value;
         const input2 = document.getElementById("jsonInput2").value;
         
         const container = document.getElementById("list");
         container.innerHTML = '';
 
         try {
-            const data = JSON.parse(input1);
-            const achievements = data.playerstats.achievements;
+            const data = JSON.parse(inputAllAchievements);
+            const achievements = data.game?.availableGameStats?.achievements || [];
+
+            if (achievements.length === 0) {
+                container.innerHTML = '<div style="color: orange; padding: 20px;">No achievements found in JSON</div>';
+                return;
+            }
+
+            container.innerHTML = '';
 
             achievements.forEach(achievement => {
                 const div = document.createElement('div');
-                div.className = `achievement ${achievement.achieved ? 'achieved' : 'locked'}`;
+                div.className = `achievement_${achievement.name}`;
 
-                const status = achievement.achieved ? '✅ Achieved' : '🔒 Locked';
-                const date = achievement.unlocktime && achievement.unlocktime > 0
-                    ? new Date(achievement.unlocktime * 1000).toLocaleDateString()
-                    : 'N/A';
+                const status = achievement.achieved ? '✅ Erreicht' : '🔒 Nicht erreicht';
 
                 div.innerHTML = `
-                <div class="name">${achievement.name}</div>
-                <div class="status ${achievement.achieved ? 'unlocked' : 'locked-status'}">${status}</div>
-                <div class="description">${achievement.description}</div>
-                ${date !== 'N/A' ? `<div class="date">Unlocked: ${date}</div>` : ''}
+                <img src="${achievement.icon}" 
+                     alt="${achievement.displayName}" 
+                     class="achievement-icon"
+                <div class="content">
+                    <div class="name">${achievement.displayName}</div>
+                    <div class="status ${achievement.achieved ? 'unlocked' : 'locked-status'}">${status}</div>
+                    <div class="description">${achievement.description}</div>
+                </div>
             `;
 
                 container.appendChild(div);
             });
-
         } catch (error) {
-            container.innerHTML = `<div style="color: red; padding: 20px;">Error: Invalid JSON. Please check your input.</div>`;
+            container.innerHTML = `<div style="color: red; padding: 20px;">❌ Fehler: Ungültiges JSON. Bitte überprüfe deinen Input.<br><small>${error.message}</small></div>`;
         }
     });
 });
