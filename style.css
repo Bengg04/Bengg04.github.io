@@ -1,3 +1,16 @@
+body {
+    background-color: #333;
+    color: #DDD;
+}
+
+input {
+    background-color: #DDD;
+}
+
+button {
+    background-color: #DDD;
+}
+
 .mainContainer {
     display: flex;
     flex-direction: column;
