@@ -4,7 +4,7 @@ $(document).ready(function(){
 
     buttonGenerateLink.addEventListener("click", () => {
         const outputAllAchievementsLink = document.getElementById("outputAllAchievementsLink");
-        const output2 = document.getElementById("output2");
+        const outputUserStatsLink = document.getElementById("outputUserStatsLink");
 
 
         const steamid = document.getElementById("steamid").value.trim();
@@ -12,12 +12,12 @@ $(document).ready(function(){
         const apikey = document.getElementById("apikey").value.trim();
 
         outputAllAchievementsLink.value = `https://api.steampowered.com/ISteamUserStats/GetSchemaForGame/v2/?key=${apikey}&appid=${appid}&l=de`;
-        output2.value = `https://api.steampowered.com/ISteamUserStats/GetPlayerAchievements/v1/?key=${apikey}&steamid=${steamid}&appid=${appid}&l=en`;
+        outputUserStatsLink.value = `https://api.steampowered.com/ISteamUserStats/GetPlayerAchievements/v1/?key=${apikey}&steamid=${steamid}&appid=${appid}&l=en`;
     });
 
     buttonRefresh.addEventListener("click", () => {
         const inputAllAchievements = document.getElementById("jsonAllAchievements").value;
-        const input2 = document.getElementById("jsonInput2").value;
+        const input2 = document.getElementById("jsonUserStats").value;
         
         const container = document.getElementById("list");
         container.innerHTML = '';
