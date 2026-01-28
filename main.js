@@ -37,22 +37,20 @@ $(document).ready(function(){
                 return;
             }
 
-            container1.innerHTML = '';
-
             achievements.forEach(achievement => {
                 const div = document.createElement('div');
-                div.className = `achievement_${achievement.name}`;
+                div.className = "achievement";
 
-                const status = achievement.achieved ? '✅ Erreicht' : '🔒 Nicht erreicht';
+                const status = achievement.achieved ? '✅ Unlocked' : '🔒 Locked';
 
                 div.innerHTML = `
-                    <img src="${achievement.icon}" 
+                    <img src="${achievement.achieved ? achievement.icon : achievement.icongray}" 
                          alt="${achievement.displayName}" 
-                         class="achievement-icon"
-                    <div class="content">
+                         class="achievement-icon" />
+                    <div class="achievement-content">
                         <div class="name">${achievement.displayName}</div>
-                        <div class="status ${achievement.achieved ? 'unlocked' : 'locked-status'}">${status}</div>
                         <div class="description">${achievement.description}</div>
+                        <div class="status" style="color: ${achievement.achieved ? "#0F0" : "#F00"}">${status}</div>
                     </div>
                 `;
                 container1.appendChild(div);

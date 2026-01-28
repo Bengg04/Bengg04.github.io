@@ -35,3 +35,25 @@ label {
     display: grid;
     grid-template-columns: 2fr 5fr;
 }
+
+.achievement {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 10px;
+    margin-bottom: 8px;
+    border: 1px solid #DDD;
+    border-radius: 1rem;
+
+}
+
+.achievement-icon {
+    width: 64px;
+    height: 64px;
+}
+
+.achievement-content {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
