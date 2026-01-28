@@ -19,8 +19,10 @@ $(document).ready(function(){
         const inputAllAchievements = document.getElementById("jsonAllAchievements").value;
         const jsonUserStats = document.getElementById("jsonUserStats").value;
         
-        const container1 = document.getElementById("list");
+        const container1 = document.getElementById("list1");
+        const container2 = document.getElementById("list2");
         container1.innerHTML = '';
+        container2.innerHTML = '';
 
         try {
             const data = JSON.parse(inputAllAchievements);
@@ -53,7 +55,12 @@ $(document).ready(function(){
                         <div class="status" style="color: ${achievement.achieved ? "#0F0" : "#F00"}">${status}</div>
                     </div>
                 `;
-                container1.appendChild(div);
+
+                if (achievement.achieved) {
+                    container1.appendChild(div);
+                } else {
+                    container2.appendChild(div);
+                }
             });
         } catch (error) {
             container1.innerHTML = `<div style="color: red; padding: 20px;">❌ Fehler: Ungültiges JSON. Bitte überprüfe deinen Input.<br><small>${error.message}</small></div>`;
