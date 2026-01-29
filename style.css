@@ -7,10 +7,6 @@ input {
     background-color: #DDD;
 }
 
-button {
-    background-color: #DDD;
-}
-
 .mainContainer {
     display: flex;
     flex-direction: column;
@@ -34,6 +30,11 @@ button {
 label {
     display: grid;
     grid-template-columns: 2fr 5fr;
+}
+
+#lists {
+    display: flex;
+    flex-direction: row;
 }
 
 .achievement {
