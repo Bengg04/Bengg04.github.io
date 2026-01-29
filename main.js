@@ -22,7 +22,9 @@ $(document).ready(function(){
         const container1 = document.getElementById("list1");
         const container2 = document.getElementById("list2");
         container1.innerHTML = '';
+        container1.appendChild(createEditableText("test"));
         container2.innerHTML = '';
+        container2.appendChild(createEditableText("test"));
 
         try {
             const data = JSON.parse(inputAllAchievements);
@@ -84,5 +86,46 @@ $(document).ready(function(){
                 achieved: playerMap[t.name]?.achieved || 0
             }))
         };
+    }
+
+    function createEditableText(defaultText) {
+        const wrapper = document.createElement('div');
+        wrapper.className = 'editable-text';
+
+        let isEditing = false;
+        let currentText = defaultText;
+
+        wrapper.textContent = defaultText;
+
+        wrapper.addEventListener('click', () => {
+            if (!isEditing) {
+                isEditing = true;
+                wrapper.classList.add('editing');
+
+                const input = document.createElement('input');
+                input.value = currentText;
+                input.select();
+
+                const save = () => {
+                    currentText = input.value || defaultText;
+                    wrapper.textContent = currentText;
+                    wrapper.classList.remove('editing');
+                    isEditing = false;
+                }
+
+                input.addEventListener('blur', _ =>{
+                    save();
+                });
+                input.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') save();
+                });
+
+                wrapper.textContent = '';
+                wrapper.appendChild(input);
+                input.focus();
+            }
+        });
+
+        return wrapper;
     }
 });
