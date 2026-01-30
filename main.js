@@ -1,11 +1,13 @@
 $(document).ready(function(){
     const buttonRefresh = document.getElementById("refreshBtn");
     const buttonGenerateLink = document.getElementById("generateLinks");
+    const buttonAddList = document.getElementById("addListButton");
+
+    let listCount = 2;
 
     buttonGenerateLink.addEventListener("click", () => {
         const outputAllAchievementsLink = document.getElementById("outputAllAchievementsLink");
         const outputUserStatsLink = document.getElementById("outputUserStatsLink");
-
 
         const steamid = document.getElementById("steamid").value.trim();
         const appid = document.getElementById("appid").value.trim();
@@ -22,9 +24,9 @@ $(document).ready(function(){
         const container1 = document.getElementById("list1");
         const container2 = document.getElementById("list2");
         container1.innerHTML = '';
-        container1.appendChild(createEditableText("test"));
+        container1.appendChild(createEditableText("Done"));
         container2.innerHTML = '';
-        container2.appendChild(createEditableText("test"));
+        container2.appendChild(createEditableText("ToDo"));
 
         try {
             const data = JSON.parse(inputAllAchievements);
@@ -67,6 +69,17 @@ $(document).ready(function(){
         } catch (error) {
             container1.innerHTML = `<div style="color: red; padding: 20px;">❌ Fehler: Ungültiges JSON. Bitte überprüfe deinen Input.<br><small>${error.message}</small></div>`;
         }
+    });
+
+    buttonAddList.addEventListener("click", () => {
+       const listContainer = document.getElementById("lists");
+
+       const list = document.createElement("div");
+       listCount++
+       list.id = `list${listCount}`;
+       list.appendChild(createEditableText("test"));
+
+       listContainer.appendChild(list);
     });
 
     function createSimplifiedJSON(templates, playerstats) {
