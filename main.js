@@ -3,7 +3,8 @@ $(document).ready(function(){
     const buttonGenerateLink = document.getElementById("generateLinks");
     const buttonAddList = document.getElementById("addListButton");
 
-    let listCount = 2;
+    const listContainer = document.getElementById("lists");
+    let listCount = 0;
 
     buttonGenerateLink.addEventListener("click", () => {
         const outputAllAchievementsLink = document.getElementById("outputAllAchievementsLink");
@@ -20,11 +21,14 @@ $(document).ready(function(){
     buttonRefresh.addEventListener("click", () => {
         const inputAllAchievements = document.getElementById("jsonAllAchievements").value;
         const jsonUserStats = document.getElementById("jsonUserStats").value;
-        
+
+        createList()
         const container1 = document.getElementById("list1");
-        const container2 = document.getElementById("list2");
         container1.innerHTML = '';
         container1.appendChild(createEditableText("Done"));
+
+        createList()
+        const container2 = document.getElementById("list2");
         container2.innerHTML = '';
         container2.appendChild(createEditableText("ToDo"));
 
@@ -72,14 +76,7 @@ $(document).ready(function(){
     });
 
     buttonAddList.addEventListener("click", () => {
-       const listContainer = document.getElementById("lists");
-
-       const list = document.createElement("div");
-       listCount++
-       list.id = `list${listCount}`;
-       list.appendChild(createEditableText("test"));
-
-       listContainer.appendChild(list);
+        createList()
     });
 
     function createSimplifiedJSON(templates, playerstats) {
@@ -140,5 +137,14 @@ $(document).ready(function(){
         });
 
         return wrapper;
+    }
+
+    function createList() {
+        const list = document.createElement("div");
+        listCount++
+        list.id = `list${listCount}`;
+        list.appendChild(createEditableText("test"));
+
+        listContainer.appendChild(list);
     }
 });
