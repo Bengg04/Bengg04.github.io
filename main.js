@@ -5,6 +5,7 @@ $(document).ready(function(){
 
     const listContainer = document.getElementById("lists");
     let listCount = 0;
+    let draggedItem = null;
 
     buttonGenerateLink.addEventListener("click", () => {
         const outputAllAchievementsLink = document.getElementById("outputAllAchievementsLink");
@@ -23,14 +24,14 @@ $(document).ready(function(){
         const jsonUserStats = document.getElementById("jsonUserStats").value;
 
         createList()
-        const container1 = document.getElementById("list1");
-        container1.innerHTML = '';
-        container1.appendChild(createEditableText("Done"));
+        const list1 = document.getElementById("list1");
+        list1.innerHTML = '';
+        list1.appendChild(createEditableText("Done"));
 
         createList()
-        const container2 = document.getElementById("list2");
-        container2.innerHTML = '';
-        container2.appendChild(createEditableText("ToDo"));
+        const list2 = document.getElementById("list2");
+        list2.innerHTML = '';
+        list2.appendChild(createEditableText("ToDo"));
 
         try {
             const data = JSON.parse(inputAllAchievements);
@@ -43,17 +44,18 @@ $(document).ready(function(){
             const achievements = simplified.achievements || [];
 
             if (achievements.length === 0) {
-                container1.innerHTML = '<div style="color: orange; padding: 20px;">No achievements found in JSON</div>';
+                list1.innerHTML = '<div style="color: orange; padding: 20px;">No achievements found in JSON</div>';
                 return;
             }
 
             achievements.forEach(achievement => {
-                const div = document.createElement('div');
-                div.className = "achievement";
+                const achievementDiv = document.createElement('div');
+                achievementDiv.className = "achievement";
+                achievementDiv.draggable = true;
 
                 const status = achievement.achieved ? '✅ Unlocked' : '🔒 Locked';
 
-                div.innerHTML = `
+                achievementDiv.innerHTML = `
                     <img src="${achievement.achieved ? achievement.icon : achievement.icongray}" 
                          alt="${achievement.displayName}" 
                          class="achievement-icon" />
@@ -64,14 +66,25 @@ $(document).ready(function(){
                     </div>
                 `;
 
+                achievementDiv.addEventListener('dragstart', () => {
+                    draggedItem = achievementDiv;
+                    achievementDiv.classList.add('dragging');
+                });
+
+                achievementDiv.addEventListener('dragend', () => {
+                    achievementDiv.classList.remove('dragging');
+                    clearDragFeedback()
+                    draggedItem = null;
+                });
+
                 if (achievement.achieved) {
-                    container1.appendChild(div);
+                    list1.appendChild(achievementDiv);
                 } else {
-                    container2.appendChild(div);
+                    list2.appendChild(achievementDiv);
                 }
             });
         } catch (error) {
-            container1.innerHTML = `<div style="color: red; padding: 20px;">❌ Fehler: Ungültiges JSON. Bitte überprüfe deinen Input.<br><small>${error.message}</small></div>`;
+            list1.innerHTML = `<div style="color: red; padding: 20px;">❌ Fehler: Ungültiges JSON. Bitte überprüfe deinen Input.<br><small>${error.message}</small></div>`;
         }
     });
 
@@ -141,10 +154,67 @@ $(document).ready(function(){
 
     function createList() {
         const list = document.createElement("div");
-        listCount++
+        listCount++;
         list.id = `list${listCount}`;
-        list.appendChild(createEditableText("test"));
-
+        list.appendChild(createEditableText("New List"));
         listContainer.appendChild(list);
+
+        list.addEventListener("dragover", (e) => {
+            e.preventDefault();
+            handleDragOver(e, list);
+        })
+
+        list.addEventListener("drop", (e) => {
+            e.preventDefault();
+            handleDrop(e, list);
+        })
+
+        list.addEventListener("dragleave", clearDragFeedback)
+    }
+
+    function handleDragOver(e, list) {
+        e.preventDefault();
+        const afterElement = getDragAfterElement(list, e.clientY);
+
+        clearDragFeedback();
+        const items = list.querySelectorAll('.achievement:not(.dragging)');
+
+        if (afterElement == null) {
+            items[items.length - 1]?.classList.add('drag-over');
+        } else {
+            afterElement.classList.add('drag-over');
+        }
+    }
+
+    function handleDrop(e, list) {
+        const afterElement = getDragAfterElement(list, e.clientY);
+        clearDragFeedback();
+
+        if (afterElement == null) {
+            list.appendChild(draggedItem);
+        } else {
+            list.insertBefore(draggedItem, afterElement);
+        }
+    }
+
+    function getDragAfterElement(container, y) {
+        const draggableElements = [...container.querySelectorAll('.achievement:not(.dragging)')];
+
+        return draggableElements.reduce((closest, child) => {
+            const box = child.getBoundingClientRect();
+            const offset = y - box.top - box.height / 2;
+
+            if (offset < 0 && offset > closest.offset) {
+                return { offset: offset, element: child };
+            } else {
+                return closest;
+            }
+        }, { offset: Number.NEGATIVE_INFINITY }).element;
+    }
+
+    function clearDragFeedback() {
+        document.querySelectorAll('.drag-over').forEach(item => {
+            item.classList.remove('drag-over');
+        });
     }
 });

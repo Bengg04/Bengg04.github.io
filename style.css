@@ -57,3 +57,12 @@ label {
     flex-direction: column;
     gap: 4px;
 }
+
+.achievement.drag-over {
+    border-color: #DDD;
+    background: #AAA;
+}
+
+.achievement.dragging {
+    opacity: 0.5;
+}
