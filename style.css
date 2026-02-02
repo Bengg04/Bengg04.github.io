@@ -42,10 +42,9 @@ label {
     align-items: flex-start;
     gap: 1rem;
     padding: 10px;
-    margin-bottom: 8px;
+    margin: 8px;
     border: 1px solid #DDD;
     border-radius: 1rem;
-
 }
 
 .achievement-icon {
