@@ -49,39 +49,7 @@ $(document).ready(function(){
             }
 
             achievements.forEach(achievement => {
-                const achievementDiv = document.createElement('div');
-                achievementDiv.className = "achievement";
-                achievementDiv.draggable = true;
-
-                const status = achievement.achieved ? '✅ Unlocked' : '🔒 Locked';
-
-                achievementDiv.innerHTML = `
-                    <img src="${achievement.achieved ? achievement.icon : achievement.icongray}" 
-                         alt="${achievement.displayName}" 
-                         class="achievement-icon" />
-                    <div class="achievement-content">
-                        <div class="name">${achievement.displayName}</div>
-                        <div class="description">${achievement.description}</div>
-                        <div class="status" style="color: ${achievement.achieved ? "#0F0" : "#F00"}">${status}</div>
-                    </div>
-                `;
-
-                achievementDiv.addEventListener('dragstart', () => {
-                    draggedItem = achievementDiv;
-                    achievementDiv.classList.add('dragging');
-                });
-
-                achievementDiv.addEventListener('dragend', () => {
-                    achievementDiv.classList.remove('dragging');
-                    clearDragFeedback()
-                    draggedItem = null;
-                });
-
-                if (achievement.achieved) {
-                    list1.appendChild(achievementDiv);
-                } else {
-                    list2.appendChild(achievementDiv);
-                }
+                createAchievement(achievement);
             });
         } catch (error) {
             list1.innerHTML = `<div style="color: red; padding: 20px;">❌ Fehler: Ungültiges JSON. Bitte überprüfe deinen Input.<br><small>${error.message}</small></div>`;
@@ -170,6 +138,42 @@ $(document).ready(function(){
         })
 
         list.addEventListener("dragleave", clearDragFeedback)
+    }
+
+    function createAchievement(achievement) {
+        const achievementDiv = document.createElement('div');
+        achievementDiv.className = "achievement";
+        achievementDiv.draggable = true;
+
+        const status = achievement.achieved ? '✅ Unlocked' : '🔒 Locked';
+
+        achievementDiv.innerHTML = `
+                    <img src="${achievement.achieved ? achievement.icon : achievement.icongray}" 
+                         alt="${achievement.displayName}" 
+                         class="achievement-icon" />
+                    <div class="achievement-content">
+                        <div class="name">${achievement.displayName}</div>
+                        <div class="description">${achievement.description}</div>
+                        <div class="status" style="color: ${achievement.achieved ? "#0F0" : "#F00"}">${status}</div>
+                    </div>
+                `;
+
+        achievementDiv.addEventListener('dragstart', () => {
+            draggedItem = achievementDiv;
+            achievementDiv.classList.add('dragging');
+        });
+
+        achievementDiv.addEventListener('dragend', () => {
+            achievementDiv.classList.remove('dragging');
+            clearDragFeedback()
+            draggedItem = null;
+        });
+
+        if (achievement.achieved) {
+            list1.appendChild(achievementDiv);
+        } else {
+            list2.appendChild(achievementDiv);
+        }
     }
 
     function handleDragOver(e, list) {
