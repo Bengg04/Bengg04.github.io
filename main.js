@@ -7,6 +7,8 @@ $(document).ready(function(){
     let listCount = 0;
     let draggedItem = null;
 
+    document.getElementById('exportBtn').addEventListener('click', exportLists);
+
     buttonGenerateLink.addEventListener("click", () => {
         const outputAllAchievementsLink = document.getElementById("outputAllAchievementsLink");
         const outputUserStatsLink = document.getElementById("outputUserStatsLink");
@@ -220,5 +222,41 @@ $(document).ready(function(){
         document.querySelectorAll('.drag-over').forEach(item => {
             item.classList.remove('drag-over');
         });
+    }
+
+    function exportLists() {
+        const container = document.getElementById('lists');
+        const lists = [];
+
+        container.querySelectorAll('div[id^="list"]').forEach(list => {
+            const titleElement = list.querySelector('.editable-text');
+            const title = titleElement ? titleElement.textContent.trim() : "Untitled";
+
+            const achievements = [];
+            list.querySelectorAll('.achievement').forEach(achievement => {
+                const img = achievement.querySelector("img")
+                const nameEl = achievement.querySelector(".name");
+                const descriptionEl = achievement.querySelector(".description");
+                const statusEl = achievement.querySelector(".status");
+
+                achievements.push({
+                    icon: img.src,
+                    displayName: nameEl.textContent.trim(),
+                    description: descriptionEl.textContent.trim(),
+                    achieved: statusEl.textContent.includes('✅')
+                });
+            });
+
+            lists.push({ id: list.id, title, achievements });
+        });
+
+        const data = {lists, listCount};
+        const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/plain' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `lists-${new Date().toISOString().slice(0,10)}.json`;
+        a.click();
+        URL.revokeObjectURL(url);
     }
 });
