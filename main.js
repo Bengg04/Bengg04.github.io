@@ -1,19 +1,16 @@
 $(document).ready(function(){
-    const buttonRefresh = document.getElementById("refreshBtn");
-    const buttonGenerateLink = document.getElementById("generateLinks");
-    const buttonAddList = document.getElementById("addListButton");
-
-    const listContainer = document.getElementById("lists");
     let listCount = 0;
     let draggedItem = null;
 
-    document.getElementById('exportBtn').addEventListener('click', exportLists);
+    document.getElementById("exportBtn").addEventListener("click", exportLists);
+
     document.getElementById("importBtn").addEventListener("click", () => {
         document.getElementById("importFile").click();
-    })
-    document.getElementById("importFile").addEventListener('change', importLists);
+    });
 
-    buttonGenerateLink.addEventListener("click", () => {
+    document.getElementById("importFile").addEventListener("change", importLists);
+
+    document.getElementById("generateLinks").addEventListener("click", () => {
         const outputAllAchievementsLink = document.getElementById("outputAllAchievementsLink");
         const outputUserStatsLink = document.getElementById("outputUserStatsLink");
 
@@ -25,18 +22,18 @@ $(document).ready(function(){
         outputUserStatsLink.value = `https://api.steampowered.com/ISteamUserStats/GetPlayerAchievements/v1/?key=${apikey}&steamid=${steamid}&appid=${appid}&l=en`;
     });
 
-    buttonRefresh.addEventListener("click", () => {
+    document.getElementById("refreshBtn").addEventListener("click", () => {
         const inputAllAchievements = document.getElementById("jsonAllAchievements").value;
         const jsonUserStats = document.getElementById("jsonUserStats").value;
 
         createList()
         const list1 = document.getElementById("list1");
-        list1.innerHTML = '';
+        list1.innerHTML = "";
         list1.appendChild(createEditableText("Done"));
 
         createList()
         const list2 = document.getElementById("list2");
-        list2.innerHTML = '';
+        list2.innerHTML = "";
         list2.appendChild(createEditableText("ToDo"));
 
         try {
@@ -62,7 +59,7 @@ $(document).ready(function(){
         }
     });
 
-    buttonAddList.addEventListener("click", () => {
+    document.getElementById("addListButton").addEventListener("click", () => {
         createList()
     });
 
@@ -86,38 +83,38 @@ $(document).ready(function(){
     }
 
     function createEditableText(defaultText) {
-        const wrapper = document.createElement('div');
-        wrapper.className = 'editable-text';
+        const wrapper = document.createElement("div");
+        wrapper.className = "editable-text";
 
         let isEditing = false;
         let currentText = defaultText;
 
         wrapper.textContent = defaultText;
 
-        wrapper.addEventListener('click', () => {
+        wrapper.addEventListener("click", () => {
             if (!isEditing) {
                 isEditing = true;
-                wrapper.classList.add('editing');
+                wrapper.classList.add("editing");
 
-                const input = document.createElement('input');
+                const input = document.createElement("input");
                 input.value = currentText;
                 input.select();
 
                 const save = () => {
                     currentText = input.value || defaultText;
                     wrapper.textContent = currentText;
-                    wrapper.classList.remove('editing');
+                    wrapper.classList.remove("editing");
                     isEditing = false;
                 }
 
-                input.addEventListener('blur', _ =>{
+                input.addEventListener("blur", _ =>{
                     save();
                 });
-                input.addEventListener('keypress', (e) => {
-                    if (e.key === 'Enter') save();
+                input.addEventListener("keypress", (e) => {
+                    if (e.key === "Enter") save();
                 });
 
-                wrapper.textContent = '';
+                wrapper.textContent = "";
                 wrapper.appendChild(input);
                 input.focus();
             }
@@ -131,7 +128,7 @@ $(document).ready(function(){
         listCount++;
         list.id = `list${listCount}`;
         list.appendChild(createEditableText("New List"));
-        listContainer.appendChild(list);
+        document.getElementById("lists").appendChild(list);
 
         list.addEventListener("dragover", (e) => {
             e.preventDefault();
@@ -147,11 +144,11 @@ $(document).ready(function(){
     }
 
     function createAchievement(achievement) {
-        const achievementDiv = document.createElement('div');
+        const achievementDiv = document.createElement("div");
         achievementDiv.className = "achievement";
         achievementDiv.draggable = true;
 
-        const status = achievement.achieved ? '✅ Unlocked' : '🔒 Locked';
+        const status = achievement.achieved ? "✅ Unlocked" : "🔒 Locked";
 
         achievementDiv.innerHTML = `
                     <img src="${!achievement.icongray || achievement.achieved ? achievement.icon : achievement.icongray}" 
@@ -164,13 +161,13 @@ $(document).ready(function(){
                     </div>
                 `;
 
-        achievementDiv.addEventListener('dragstart', () => {
+        achievementDiv.addEventListener("dragstart", () => {
             draggedItem = achievementDiv;
-            achievementDiv.classList.add('dragging');
+            achievementDiv.classList.add("dragging");
         });
 
-        achievementDiv.addEventListener('dragend', () => {
-            achievementDiv.classList.remove('dragging');
+        achievementDiv.addEventListener("dragend", () => {
+            achievementDiv.classList.remove("dragging");
             clearDragFeedback()
             draggedItem = null;
         });
@@ -183,12 +180,12 @@ $(document).ready(function(){
         const afterElement = getDragAfterElement(list, e.clientY);
 
         clearDragFeedback();
-        const items = list.querySelectorAll('.achievement:not(.dragging)');
+        const items = list.querySelectorAll(".achievement:not(.dragging)");
 
         if (afterElement == null) {
-            items[items.length - 1]?.classList.add('drag-over');
+            items[items.length - 1]?.classList.add("drag-over");
         } else {
-            afterElement.classList.add('drag-over');
+            afterElement.classList.add("drag-over");
         }
     }
 
@@ -204,7 +201,7 @@ $(document).ready(function(){
     }
 
     function getDragAfterElement(container, y) {
-        const draggableElements = [...container.querySelectorAll('.achievement:not(.dragging)')];
+        const draggableElements = [...container.querySelectorAll(".achievement:not(.dragging)")];
 
         return draggableElements.reduce((closest, child) => {
             const box = child.getBoundingClientRect();
@@ -219,21 +216,21 @@ $(document).ready(function(){
     }
 
     function clearDragFeedback() {
-        document.querySelectorAll('.drag-over').forEach(item => {
-            item.classList.remove('drag-over');
+        document.querySelectorAll(".drag-over").forEach(item => {
+            item.classList.remove("drag-over");
         });
     }
 
     function exportLists() {
-        const container = document.getElementById('lists');
+        const container = document.getElementById("lists");
         const lists = [];
 
         container.querySelectorAll('div[id^="list"]').forEach(list => {
-            const titleElement = list.querySelector('.editable-text');
+            const titleElement = list.querySelector(".editable-text");
             const title = titleElement ? titleElement.textContent.trim() : "Untitled";
 
             const achievements = [];
-            list.querySelectorAll('.achievement').forEach(achievement => {
+            list.querySelectorAll(".achievement").forEach(achievement => {
                 const img = achievement.querySelector("img")
                 const nameEl = achievement.querySelector(".name");
                 const descriptionEl = achievement.querySelector(".description");
@@ -243,7 +240,7 @@ $(document).ready(function(){
                     icon: img.src,
                     displayName: nameEl.textContent.trim(),
                     description: descriptionEl.textContent.trim(),
-                    achieved: statusEl.textContent.includes('✅')
+                    achieved: statusEl.textContent.includes("✅")
                 });
             });
 
@@ -251,9 +248,9 @@ $(document).ready(function(){
         });
 
         const data = {lists, listCount};
-        const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/plain' });
+        const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/plain" });
         const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
+        const a = document.createElement("a");
         a.href = url;
         a.download = `lists-${new Date().toISOString().slice(0,10)}.json`;
         a.click();
@@ -269,9 +266,9 @@ $(document).ready(function(){
             try {
                 const data = JSON.parse(e.target.result);
                 restoreLists(data);
-                document.getElementById('importFile').value = ''; // reset
+                document.getElementById("importFile").value = ""; // reset
             } catch (err) {
-                console.log('Invalid file: ' + err.message);
+                console.log("Invalid file: " + err.message);
             }
         };
         reader.readAsText(file);
@@ -279,11 +276,11 @@ $(document).ready(function(){
 
     function restoreLists(data) {
         // Clear everything
-        document.getElementById('lists').innerHTML = '';
+        document.getElementById("lists").innerHTML = "";
         listCount = data.listCount || 0;
 
         data.lists.forEach(listData => {
-            const list = document.createElement('div');
+            const list = document.createElement("div");
             list.id = listData.id;
 
             // Restore editable title
@@ -313,7 +310,7 @@ $(document).ready(function(){
             });
             list.addEventListener("dragleave", clearDragFeedback);
 
-            document.getElementById('lists').appendChild(list);
+            document.getElementById("lists").appendChild(list);
         });
     }
 });
