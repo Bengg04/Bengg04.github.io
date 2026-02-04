@@ -8,6 +8,10 @@ $(document).ready(function(){
     let draggedItem = null;
 
     document.getElementById('exportBtn').addEventListener('click', exportLists);
+    document.getElementById("importBtn").addEventListener("click", () => {
+        document.getElementById("importFile").click();
+    })
+    document.getElementById("importFile").addEventListener('change', importLists);
 
     buttonGenerateLink.addEventListener("click", () => {
         const outputAllAchievementsLink = document.getElementById("outputAllAchievementsLink");
@@ -51,7 +55,7 @@ $(document).ready(function(){
             }
 
             achievements.forEach(achievement => {
-                createAchievement(achievement);
+                (achievement.achieved ? list1 : list2).appendChild(createAchievement(achievement));
             });
         } catch (error) {
             list1.innerHTML = `<div style="color: red; padding: 20px;">❌ Fehler: Ungültiges JSON. Bitte überprüfe deinen Input.<br><small>${error.message}</small></div>`;
@@ -150,7 +154,7 @@ $(document).ready(function(){
         const status = achievement.achieved ? '✅ Unlocked' : '🔒 Locked';
 
         achievementDiv.innerHTML = `
-                    <img src="${achievement.achieved ? achievement.icon : achievement.icongray}" 
+                    <img src="${!achievement.icongray || achievement.achieved ? achievement.icon : achievement.icongray}" 
                          alt="${achievement.displayName}" 
                          class="achievement-icon" />
                     <div class="achievement-content">
@@ -171,11 +175,7 @@ $(document).ready(function(){
             draggedItem = null;
         });
 
-        if (achievement.achieved) {
-            list1.appendChild(achievementDiv);
-        } else {
-            list2.appendChild(achievementDiv);
-        }
+        return achievementDiv;
     }
 
     function handleDragOver(e, list) {
@@ -258,5 +258,62 @@ $(document).ready(function(){
         a.download = `lists-${new Date().toISOString().slice(0,10)}.json`;
         a.click();
         URL.revokeObjectURL(url);
+    }
+
+    function importLists(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            try {
+                const data = JSON.parse(e.target.result);
+                restoreLists(data);
+                document.getElementById('importFile').value = ''; // reset
+            } catch (err) {
+                console.log('Invalid file: ' + err.message);
+            }
+        };
+        reader.readAsText(file);
+    }
+
+    function restoreLists(data) {
+        // Clear everything
+        document.getElementById('lists').innerHTML = '';
+        listCount = data.listCount || 0;
+
+        data.lists.forEach(listData => {
+            const list = document.createElement('div');
+            list.id = listData.id;
+
+            // Restore editable title
+            const titleDiv = createEditableText(listData.title);
+            list.appendChild(titleDiv);
+
+            // Restore achievements
+            listData.achievements.forEach(achievement => {
+                const achievementDiv = createAchievement({
+                    icon: achievement.icon,
+                    displayName: achievement.displayName,
+                    description: achievement.description,
+                    achieved: achievement.achieved
+                });
+                // DON'T auto-append - manually add to this list
+                list.appendChild(achievementDiv);
+            });
+
+            // Re-attach drag/drop events
+            list.addEventListener("dragover", (e) => {
+                e.preventDefault();
+                handleDragOver(e, list);
+            });
+            list.addEventListener("drop", (e) => {
+                e.preventDefault();
+                handleDrop(e, list);
+            });
+            list.addEventListener("dragleave", clearDragFeedback);
+
+            document.getElementById('lists').appendChild(list);
+        });
     }
 });
