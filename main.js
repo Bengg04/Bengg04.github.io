@@ -1,4 +1,6 @@
 $(document).ready(function(){
+    const listsContainer = document.getElementById("listsContainer");
+
     let listCount = 0;
     let draggedItem = null;
 
@@ -25,6 +27,7 @@ $(document).ready(function(){
     document.getElementById("refreshBtn").addEventListener("click", () => {
         const inputAllAchievements = document.getElementById("jsonAllAchievements").value;
         const jsonUserStats = document.getElementById("jsonUserStats").value;
+        listsContainer.innerHTML = "";
 
         createList()
         const list1 = document.getElementById("list1");
@@ -128,7 +131,7 @@ $(document).ready(function(){
         listCount++;
         list.id = `list${listCount}`;
         list.appendChild(createEditableText("New List"));
-        document.getElementById("lists").appendChild(list);
+        listsContainer.appendChild(list);
 
         list.addEventListener("dragover", (e) => {
             e.preventDefault();
@@ -222,10 +225,9 @@ $(document).ready(function(){
     }
 
     function exportLists() {
-        const container = document.getElementById("lists");
         const lists = [];
 
-        container.querySelectorAll('div[id^="list"]').forEach(list => {
+        listsContainer.querySelectorAll('div[id^="list"]').forEach(list => {
             const titleElement = list.querySelector(".editable-text");
             const title = titleElement ? titleElement.textContent.trim() : "Untitled";
 
@@ -276,7 +278,7 @@ $(document).ready(function(){
 
     function restoreLists(data) {
         // Clear everything
-        document.getElementById("lists").innerHTML = "";
+        listsContainer.innerHTML = "";
         listCount = data.listCount || 0;
 
         data.lists.forEach(listData => {
@@ -310,7 +312,7 @@ $(document).ready(function(){
             });
             list.addEventListener("dragleave", clearDragFeedback);
 
-            document.getElementById("lists").appendChild(list);
+            listsContainer.appendChild(list);
         });
     }
 });
