@@ -1,18 +1,23 @@
 $(document).ready(function(){
-    const listsContainer = document.getElementById("listsContainer");
+    const listsContainerElement = document.getElementById("listsContainer");
+    const exportButtonElement = document.getElementById("exportButton");
+    const importButtonElement = document.getElementById("importButton");
+    const importFileInputElement = document.getElementById("importFileInput");
+    const generateLinksButtonElement = document.getElementById("generateLinksButton");
+    const refreshButtonElement = document.getElementById("refreshButton");
 
     let listCount = 0;
     let draggedItem = null;
 
-    document.getElementById("exportButton").addEventListener("click", exportLists);
+    exportButtonElement.addEventListener("click", exportLists);
 
-    document.getElementById("importButton").addEventListener("click", () => {
-        document.getElementById("importFileInput").click();
+    importButtonElement.addEventListener("click", () => {
+        importFileInputElement.click();
     });
 
-    document.getElementById("importFileInput").addEventListener("change", importLists);
+    importFileInputElement.addEventListener("change", importLists);
 
-    document.getElementById("generateLinksButton").addEventListener("click", () => {
+    generateLinksButtonElement.addEventListener("click", () => {
         const outputAllAchievementsLink = document.getElementById("allAchievementsLinkOutput");
         const outputUserStatsLink = document.getElementById("userStatsLinkOutput");
 
@@ -24,30 +29,31 @@ $(document).ready(function(){
         outputUserStatsLink.value = `https://api.steampowered.com/ISteamUserStats/GetPlayerAchievements/v1/?key=${apikey}&steamid=${steamid}&appid=${appid}&l=en`;
     });
 
-    document.getElementById("refreshButton").addEventListener("click", () => {
+    refreshButtonElement.addEventListener("click", () => {
         const inputAllAchievements = document.getElementById("jsonAllAchievementsInput").value;
         const jsonUserStats = document.getElementById("jsonUserStatsInput").value;
-        listsContainer.innerHTML = "";
+
+        listsContainerElement.innerHTML = "";
 
         createList()
-        const list1 = document.getElementById("list1");
-        list1.innerHTML = "";
-        list1.appendChild(createEditableText("Done"));
+        const list1Element = document.getElementById("list1");
+        list1Element.innerHTML = "";
+        list1Element.appendChild(createEditableText("Done"));
 
         createList()
-        const list2 = document.getElementById("list2");
-        list2.innerHTML = "";
-        list2.appendChild(createEditableText("ToDo"));
+        const list2Element = document.getElementById("list2");
+        list2Element.innerHTML = "";
+        list2Element.appendChild(createEditableText("ToDo"));
 
         try {
-            const data = JSON.parse(inputAllAchievements);
-            const playerdata = JSON.parse(jsonUserStats);
+            const gameData = JSON.parse(inputAllAchievements);
+            const playerData = JSON.parse(jsonUserStats);
 
-            const simplified = createSimplifiedJSON(
-                data.game?.availableGameStats?.achievements || [],
-                playerdata.playerstats.achievements || []
+            const simplifiedJSON = createSimplifiedJSON(
+                gameData.game?.availableGameStats?.achievements || [],
+                playerData.playerstats.achievements || []
             );
-            const achievements = simplified.achievements || [];
+            const achievements = simplifiedJSON.achievements || [];
 
             if (achievements.length === 0) {
                 console.log("No achievements found in JSON");
@@ -55,7 +61,7 @@ $(document).ready(function(){
             }
 
             achievements.forEach(achievement => {
-                (achievement.achieved ? list1 : list2).appendChild(createAchievement(achievement));
+                (achievement.achieved ? list1Element : list2Element).appendChild(createAchievement(achievement));
             });
         } catch (error) {
             console.log("Error: " + error);
@@ -66,64 +72,65 @@ $(document).ready(function(){
         createList()
     });
 
-    function createSimplifiedJSON(templates, playerstats) {
+    function createSimplifiedJSON(gameData, playerData) {
         const playerMap = {};
-        playerstats.forEach(p => {
-            playerMap[p.apiname] = { achieved: p.achieved };
+        playerData.forEach(pData => {
+            playerMap[pData.apiname] = { achieved: pData.achieved };
         });
 
         return {
-            achievements: templates.map(t => ({
-                name: t.name,
-                displayName: t.displayName,
-                hidden: t.hidden,
-                description: t.description,
-                icon: t.icon,
-                icongray: t.icongray,
-                achieved: playerMap[t.name]?.achieved || 0
+            achievements: gameData.map(gData => ({
+                name: gData.name,
+                displayName: gData.displayName,
+                hidden: gData.hidden,
+                description: gData.description,
+                icon: gData.icon,
+                icongray: gData.icongray,
+                achieved: playerMap[gData.name]?.achieved || 0
             }))
         };
     }
 
-    function createEditableText(defaultText) {
-        const wrapper = document.createElement("div");
-        wrapper.className = "editableText";
+    function createEditableText(listName) {
+        const listNameContainer = document.createElement("div");
+        listNameContainer.className = "editableText";
 
         let isEditing = false;
-        let currentText = defaultText;
+        let currentName = listName;
 
-        wrapper.textContent = defaultText;
+        listNameContainer.textContent = listName;
 
-        wrapper.addEventListener("click", () => {
+        listNameContainer.addEventListener("click", () => {
             if (!isEditing) {
                 isEditing = true;
-                wrapper.classList.add("editing");
+                listNameContainer.classList.add("editing");
 
                 const input = document.createElement("input");
-                input.value = currentText;
+                input.value = currentName;
                 input.select();
 
                 const save = () => {
-                    currentText = input.value || defaultText;
-                    wrapper.textContent = currentText;
-                    wrapper.classList.remove("editing");
+                    currentName = input.value || listName;
+                    listNameContainer.textContent = currentName;
+                    listNameContainer.classList.remove("editing");
                     isEditing = false;
                 }
 
-                input.addEventListener("blur", _ =>{
+                input.addEventListener("blur", () =>{
                     save();
                 });
+
                 input.addEventListener("keypress", (e) => {
                     if (e.key === "Enter") save();
                 });
 
-                wrapper.textContent = "";
-                wrapper.appendChild(input);
+                listNameContainer.textContent = "";
+                listNameContainer.appendChild(input);
                 input.focus();
             }
         });
 
-        return wrapper;
+        return listNameContainer;
     }
 
     function createList() {
@@ -131,7 +138,7 @@ $(document).ready(function(){
         listCount++;
         list.id = `list${listCount}`;
         list.appendChild(createEditableText("New List"));
-        listsContainer.appendChild(list);
+        listsContainerElement.appendChild(list);
 
         list.addEventListener("dragover", (e) => {
             e.preventDefault();
@@ -154,15 +161,15 @@ $(document).ready(function(){
         const status = achievement.achieved ? "✅ Unlocked" : "🔒 Locked";
 
         achievementDiv.innerHTML = `
-                    <img src="${!achievement.icongray || achievement.achieved ? achievement.icon : achievement.icongray}" 
-                         alt="${achievement.displayName}" 
-                         class="achievementIcon" />
-                    <div class="achievementContent">
-                        <div class="name">${achievement.displayName}</div>
-                        <div class="description">${achievement.description}</div>
-                        <div class="status" style="color: ${achievement.achieved ? "#0F0" : "#F00"}">${status}</div>
-                    </div>
-                `;
+            <img src="${!achievement.icongray || achievement.achieved ? achievement.icon : achievement.icongray}" 
+                alt="${achievement.displayName}" 
+                class="achievementIcon" />
+            <div class="achievementContent">
+                <div class="name">${achievement.displayName}</div>
+                <div class="description">${achievement.description}</div>
+                <div class="status" style="color: ${achievement.achieved ? "#0F0" : "#F00"}">${status}</div>
+            </div>
+        `;
 
         achievementDiv.addEventListener("dragstart", () => {
             draggedItem = achievementDiv;
@@ -227,22 +234,22 @@ $(document).ready(function(){
     function exportLists() {
         const lists = [];
 
-        listsContainer.querySelectorAll('div[id^="list"]').forEach(list => {
+        listsContainerElement.querySelectorAll('div[id^="list"]').forEach(list => {
             const titleElement = list.querySelector(".editableText");
             const title = titleElement ? titleElement.textContent.trim() : "Untitled";
 
             const achievements = [];
             list.querySelectorAll(".achievement").forEach(achievement => {
-                const img = achievement.querySelector("img")
-                const nameEl = achievement.querySelector(".name");
-                const descriptionEl = achievement.querySelector(".description");
-                const statusEl = achievement.querySelector(".status");
+                const imgElement = achievement.querySelector("img")
+                const nameElement = achievement.querySelector(".name");
+                const descriptionElement = achievement.querySelector(".description");
+                const statusElement = achievement.querySelector(".status");
 
                 achievements.push({
-                    icon: img.src,
-                    displayName: nameEl.textContent.trim(),
-                    description: descriptionEl.textContent.trim(),
-                    achieved: statusEl.textContent.includes("✅")
+                    icon: imgElement.src,
+                    displayName: nameElement.textContent.trim(),
+                    description: descriptionElement.textContent.trim(),
+                    achieved: statusElement.textContent.includes("✅")
                 });
             });
 
@@ -268,7 +275,7 @@ $(document).ready(function(){
             try {
                 const data = JSON.parse(e.target.result);
                 restoreLists(data);
-                document.getElementById("importFileInput").value = ""; // reset
+                importFileInputElement.value = "";
             } catch (err) {
                 console.log("Invalid file: " + err.message);
             }
@@ -277,19 +284,16 @@ $(document).ready(function(){
     }
 
     function restoreLists(data) {
-        // Clear everything
-        listsContainer.innerHTML = "";
+        listsContainerElement.innerHTML = "";
         listCount = data.listCount || 0;
 
         data.lists.forEach(listData => {
             const list = document.createElement("div");
             list.id = listData.id;
 
-            // Restore editable title
             const titleDiv = createEditableText(listData.title);
             list.appendChild(titleDiv);
 
-            // Restore achievements
             listData.achievements.forEach(achievement => {
                 const achievementDiv = createAchievement({
                     icon: achievement.icon,
@@ -297,11 +301,9 @@ $(document).ready(function(){
                     description: achievement.description,
                     achieved: achievement.achieved
                 });
-                // DON'T auto-append - manually add to this list
                 list.appendChild(achievementDiv);
             });
 
-            // Re-attach drag/drop events
             list.addEventListener("dragover", (e) => {
                 e.preventDefault();
                 handleDragOver(e, list);
@@ -312,7 +314,7 @@ $(document).ready(function(){
             });
             list.addEventListener("dragleave", clearDragFeedback);
 
-            listsContainer.appendChild(list);
+            listsContainerElement.appendChild(list);
         });
     }
 });
