@@ -47,18 +47,18 @@ label {
     border-radius: 1rem;
 }
 
-.achievement-icon {
+.achievementIcon {
     width: 64px;
     height: 64px;
 }
 
-.achievement-content {
+.achievementContent {
     display: flex;
     flex-direction: column;
     gap: 4px;
 }
 
-.achievement.drag-over {
+.achievement.dragOver {
     border-color: #DDD;
     background: #AAA;
 }

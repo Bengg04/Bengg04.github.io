@@ -11,58 +11,57 @@
         <div class="mainContainer">
             <h1>Steam Achievement Tracker</h1>
             <div class="menuContainer">
-                <div id="inputs">
+                <div id="inputsContainer">
                     <h2>Inputs</h2>
                     <div class="inputContainer">
                         <label>
                             SteamID:
-                            <input type="text" id="steamid" required />
+                            <input type="text" id="steamidInput" required />
                         </label>
                         <label>
                             AppID:
-                            <input type="text" id="appid" required />
+                            <input type="text" id="appidInput" required />
                         </label>
                         <label>
                             APIKey:
-                            <input type="text" id="apikey" required />
+                            <input type="text" id="apikeyInput" required />
                         </label>
                     </div>
                 </div>
-                <div id="links">
+                <div id="linksContainer">
                     <h2>Links</h2>
                     <div class="inputContainer">
-                        <button id="generateLinks">generate Links</button>
-                        <label for="outputAllAchievementsLink">
+                        <button id="generateLinksButton">generate Links</button>
+                        <label for="allAchievementsLinkOutput">
                             Achievements
-                            <input type="text" readonly id="outputAllAchievementsLink" />
+                            <input type="text" readonly id="allAchievementsLinkOutput" />
                         </label>
-                        <label for="outputUserStatsLink">
+                        <label for="userStatsLinkOutput">
                             User stats
-                            <input type="text" readonly id="outputUserStatsLink" />
+                            <input type="text" readonly id="userStatsLinkOutput" />
                         </label>
                     </div>
                 </div>
-                <div id="jsonInputs">
+                <div id="jsonInputsContainer">
                     <h2>JSON inputs</h2>
                     <div class="inputContainer">
-                        <label for="jsonAllAchievements">
+                        <label for="jsonAllAchievementsInput">
                             Achievements
-                            <input type="text" id="jsonAllAchievements" />
+                            <input type="text" id="jsonAllAchievementsInput" />
                         </label>
-                        <label for="jsonUserStats">
+                        <label for="jsonUserStatsInput">
                             User stats
-                            <input type="text" id="jsonUserStats" />
+                            <input type="text" id="jsonUserStatsInput" />
                         </label>
-                        <button id="refreshBtn">refresh / load Achievements</button>
+                        <button id="refreshButton">refresh / load Achievements</button>
                     </div>
                 </div>
             </div>
             <div>
-                <button id="exportBtn">📤 Export Lists</button>
-                <input id="importFile" type="file" accept=".json" style="display:none;">
-                <button id="importBtn">📥 Import Lists</button>
+                <button id="exportButton">📤 Export Lists</button>
+                <input id="importFileInput" type="file" accept=".json" style="display:none;">
+                <button id="importButton">📥 Import Lists</button>
             </div>
-            <div id="status"></div>
             <button id="addListButton">Add List</button>
             <div id="listsContainer"></div>
         </div>

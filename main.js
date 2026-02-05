@@ -4,29 +4,29 @@ $(document).ready(function(){
     let listCount = 0;
     let draggedItem = null;
 
-    document.getElementById("exportBtn").addEventListener("click", exportLists);
+    document.getElementById("exportButton").addEventListener("click", exportLists);
 
-    document.getElementById("importBtn").addEventListener("click", () => {
-        document.getElementById("importFile").click();
+    document.getElementById("importButton").addEventListener("click", () => {
+        document.getElementById("importFileInput").click();
     });
 
-    document.getElementById("importFile").addEventListener("change", importLists);
+    document.getElementById("importFileInput").addEventListener("change", importLists);
 
-    document.getElementById("generateLinks").addEventListener("click", () => {
-        const outputAllAchievementsLink = document.getElementById("outputAllAchievementsLink");
-        const outputUserStatsLink = document.getElementById("outputUserStatsLink");
+    document.getElementById("generateLinksButton").addEventListener("click", () => {
+        const outputAllAchievementsLink = document.getElementById("allAchievementsLinkOutput");
+        const outputUserStatsLink = document.getElementById("userStatsLinkOutput");
 
-        const steamid = document.getElementById("steamid").value.trim();
-        const appid = document.getElementById("appid").value.trim();
-        const apikey = document.getElementById("apikey").value.trim();
+        const steamid = document.getElementById("steamidInput").value.trim();
+        const appid = document.getElementById("appidInput").value.trim();
+        const apikey = document.getElementById("apikeyInput").value.trim();
 
         outputAllAchievementsLink.value = `https://api.steampowered.com/ISteamUserStats/GetSchemaForGame/v2/?key=${apikey}&appid=${appid}&l=de`;
         outputUserStatsLink.value = `https://api.steampowered.com/ISteamUserStats/GetPlayerAchievements/v1/?key=${apikey}&steamid=${steamid}&appid=${appid}&l=en`;
     });
 
-    document.getElementById("refreshBtn").addEventListener("click", () => {
-        const inputAllAchievements = document.getElementById("jsonAllAchievements").value;
-        const jsonUserStats = document.getElementById("jsonUserStats").value;
+    document.getElementById("refreshButton").addEventListener("click", () => {
+        const inputAllAchievements = document.getElementById("jsonAllAchievementsInput").value;
+        const jsonUserStats = document.getElementById("jsonUserStatsInput").value;
         listsContainer.innerHTML = "";
 
         createList()
@@ -50,7 +50,7 @@ $(document).ready(function(){
             const achievements = simplified.achievements || [];
 
             if (achievements.length === 0) {
-                list1.innerHTML = '<div style="color: orange; padding: 20px;">No achievements found in JSON</div>';
+                console.log("No achievements found in JSON");
                 return;
             }
 
@@ -58,7 +58,7 @@ $(document).ready(function(){
                 (achievement.achieved ? list1 : list2).appendChild(createAchievement(achievement));
             });
         } catch (error) {
-            list1.innerHTML = `<div style="color: red; padding: 20px;">❌ Fehler: Ungültiges JSON. Bitte überprüfe deinen Input.<br><small>${error.message}</small></div>`;
+            console.log("Error: " + error);
         }
     });
 
@@ -87,7 +87,7 @@ $(document).ready(function(){
 
     function createEditableText(defaultText) {
         const wrapper = document.createElement("div");
-        wrapper.className = "editable-text";
+        wrapper.className = "editableText";
 
         let isEditing = false;
         let currentText = defaultText;
@@ -156,8 +156,8 @@ $(document).ready(function(){
         achievementDiv.innerHTML = `
                     <img src="${!achievement.icongray || achievement.achieved ? achievement.icon : achievement.icongray}" 
                          alt="${achievement.displayName}" 
-                         class="achievement-icon" />
-                    <div class="achievement-content">
+                         class="achievementIcon" />
+                    <div class="achievementContent">
                         <div class="name">${achievement.displayName}</div>
                         <div class="description">${achievement.description}</div>
                         <div class="status" style="color: ${achievement.achieved ? "#0F0" : "#F00"}">${status}</div>
@@ -186,9 +186,9 @@ $(document).ready(function(){
         const items = list.querySelectorAll(".achievement:not(.dragging)");
 
         if (afterElement == null) {
-            items[items.length - 1]?.classList.add("drag-over");
+            items[items.length - 1]?.classList.add("dragOver");
         } else {
-            afterElement.classList.add("drag-over");
+            afterElement.classList.add("dragOver");
         }
     }
 
@@ -219,8 +219,8 @@ $(document).ready(function(){
     }
 
     function clearDragFeedback() {
-        document.querySelectorAll(".drag-over").forEach(item => {
-            item.classList.remove("drag-over");
+        document.querySelectorAll(".dragOver").forEach(item => {
+            item.classList.remove("dragOver");
         });
     }
 
@@ -228,7 +228,7 @@ $(document).ready(function(){
         const lists = [];
 
         listsContainer.querySelectorAll('div[id^="list"]').forEach(list => {
-            const titleElement = list.querySelector(".editable-text");
+            const titleElement = list.querySelector(".editableText");
             const title = titleElement ? titleElement.textContent.trim() : "Untitled";
 
             const achievements = [];
@@ -268,7 +268,7 @@ $(document).ready(function(){
             try {
                 const data = JSON.parse(e.target.result);
                 restoreLists(data);
-                document.getElementById("importFile").value = ""; // reset
+                document.getElementById("importFileInput").value = ""; // reset
             } catch (err) {
                 console.log("Invalid file: " + err.message);
             }
