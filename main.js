@@ -241,9 +241,9 @@ $(document).ready(function(){
             const achievements = [];
             list.querySelectorAll(".achievement").forEach(achievement => {
                 const imgElement = achievement.querySelector("img")
-                const nameElement = achievement.querySelector(".name");
-                const descriptionElement = achievement.querySelector(".description");
-                const statusElement = achievement.querySelector(".status");
+                const nameElement = achievement.querySelector(".achievementName");
+                const descriptionElement = achievement.querySelector(".achievementDescription");
+                const statusElement = achievement.querySelector(".achievementStatus");
 
                 achievements.push({
                     icon: imgElement.src,
