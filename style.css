@@ -58,6 +58,15 @@ label {
     gap: 4px;
 }
 
+.achievementName{
+    font-weight: bold;
+    font-size: 1rem;
+}
+
+.achievementDescription{
+    font-size: .75rem;
+}
+
 .achievement.dragOver {
     border-color: #DDD;
     background: #AAA;

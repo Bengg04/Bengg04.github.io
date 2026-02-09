@@ -165,9 +165,9 @@ $(document).ready(function(){
                 alt="${achievement.displayName}" 
                 class="achievementIcon" />
             <div class="achievementContent">
-                <div class="name">${achievement.displayName}</div>
-                <div class="description">${achievement.description}</div>
-                <div class="status" style="color: ${achievement.achieved ? "#0F0" : "#F00"}">${status}</div>
+                <div class="achievementName">${achievement.displayName}</div>
+                <div class="achievementDescription">${achievement.description}</div>
+                <div class="achievementStatus" style="color: ${achievement.achieved ? "#0F0" : "#F00"}">${status}</div>
             </div>
         `;
 
